@@ -1,18 +1,8 @@
 """
 AI Game Referee – Rock–Paper–Scissors–Plus
-
-This implementation follows Google ADK principles:
-- Single agent orchestration
-- Explicit tools for validation, logic, and state mutation
-- Structured state outside prompts
-- Deterministic, explainable behavior
-
-The code runs with or without Google ADK installed.
 """
 
-# -----------------------------
-# SAFE GOOGLE ADK IMPORT
-# -----------------------------
+# SAFE GOOGLE ADK IMPORT1
 try:
     from google.adk import Agent, tool
     ADK_AVAILABLE = True
@@ -21,15 +11,11 @@ except ImportError:
 
 import random
 
-# -----------------------------
 # GAME CONSTANTS
-# -----------------------------
 VALID_MOVES = ["rock", "paper", "scissors", "bomb"]
 MAX_ROUNDS = 3
 
-# -----------------------------
 # GAME STATE (STRUCTURED, PERSISTENT)
-# -----------------------------
 game_state = {
     "round": 1,
     "user_score": 0,
@@ -39,13 +25,8 @@ game_state = {
     "game_over": False
 }
 
-# =====================================================
 # TOOLS (VALIDATION / LOGIC / STATE MUTATION)
-# =====================================================
-
-# -----------------------------
 # TOOL 1: VALIDATE MOVE
-# -----------------------------
 if ADK_AVAILABLE:
     @tool
     def validate_move(user_move: str, state: dict) -> dict:
@@ -71,9 +52,7 @@ else:
         return {"valid": True, "move": user_move}
 
 
-# -----------------------------
 # TOOL 2: RESOLVE ROUND
-# -----------------------------
 if ADK_AVAILABLE:
     @tool
     def resolve_round(user_move: str, bot_move: str) -> dict:
@@ -117,9 +96,7 @@ else:
         return {"winner": "bot"}
 
 
-# -----------------------------
 # TOOL 3: UPDATE GAME STATE
-# -----------------------------
 if ADK_AVAILABLE:
     @tool
     def update_game_state(state: dict, user_move: str, bot_move: str, result: dict) -> dict:
@@ -157,20 +134,13 @@ else:
             state["game_over"] = True
 
         return state
-
-
-# -----------------------------
 # BOT MOVE LOGIC
-# -----------------------------
 def choose_bot_move(state: dict) -> str:
     if state["bot_bomb_used"]:
         return random.choice(["rock", "paper", "scissors"])
     return random.choice(VALID_MOVES)
 
-
-# =====================================================
 # AGENT ORCHESTRATION LOOP
-# =====================================================
 def run_game():
     print("Welcome to Rock–Paper–Scissors–Plus!")
     print("Best of 3 rounds.")
@@ -218,9 +188,7 @@ def run_game():
         print("Final Result: Draw 🤝")
 
 
-# -----------------------------
 # OPTIONAL: ADK AGENT DECLARATION
-# -----------------------------
 if ADK_AVAILABLE:
     game_agent = Agent(
         name="RPSPlusReferee",
@@ -228,8 +196,6 @@ if ADK_AVAILABLE:
         tools=[validate_move, resolve_round, update_game_state],
     )
 
-# -----------------------------
 # ENTRY POINT
-# -----------------------------
 if __name__ == "__main__":
     run_game()
